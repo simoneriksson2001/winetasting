@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vinlotto 🍷</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif; }
+    body { margin: 0; padding: 32px; background: #f8f7f5; color: #222; display: flex; justify-content: center; }
+    .card { background: #fff; border-radius: 14px; padding: 32px; max-width: 900px; width: 100%; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #e2e2e2; }
+    h1 { margin: 0 0 8px; font-size: 1.8rem; text-align: center; }
+    p.desc { text-align: center; margin-bottom: 28px; color: #555; }
+    h2 { margin: 0 0 10px; font-size: 1.1rem; }
+    textarea { width: 100%; min-height: 260px; padding: 10px; border-radius: 10px; border: 1px solid #ccc; font: inherit; background: #fafafa; resize: vertical; }
+    button { cursor: pointer; border: none; background: #4c6fff; color: #fff; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: 1rem; transition: 0.2s; }
+    button:hover { background: #3b55d6; }
+    button.secondary { background: #fff; color: #1a1a1a; border: 1px solid #ccc; }
+    .actions { text-align: center; margin-top: 16px; margin-bottom: 24px; }
+    .links { display: grid; gap: 12px; }
+    .linkcard { padding: 14px; border: 1px dashed #ccc; border-radius: 10px; background: #f6f8ff; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size: 0.9rem; word-break: break-all; }
+    .muted { color: #666; font-size: .95em; }
+    .pill { display: inline-block; padding: 3px 10px; border-radius: 999px; background: #eef0ff; border: 1px solid #d7dbff; font-size: .8em; }
+    #revealCard { text-align: center; }
+    #themeBox { margin: 24px auto; max-width: 400px; padding: 16px; border-radius: 12px; border: 2px solid #d8d8f5; background: #f7f8ff; font-size: 1.4rem; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="card" id="revealCard" style="display:none">
+    <h1>🍇 Ditt vinområde</h1>
+    <p class="muted">Den här sidan visar bara ditt eget område.</p>
+    <div id="themeBox"></div>
+  </div>
+
+  <div class="card" id="adminCard">
+    <h1>Vinlotto 🍷</h1>
+    <p class="desc">20 vinregioner – slumpas till Simon, Isak och William. Var och en får sin egen hemliga länk.</p>
+
+    <h2>Vinregioner</h2>
+    <textarea id="themesInput" spellcheck="false"></textarea>
+
+    <div class="actions">
+      <button id="genBtn">🎲 Skapa tre hemliga länkar</button>
+    </div>
+
+    <div id="linksBox" class="links"><div class="muted" style="text-align:center;">Inga länkar ännu.</div></div>
+  </div>
+
+<script>
+(async function() {
+  const qs = sel => document.querySelector(sel);
+  const themesInput = qs('#themesInput');
+  const genBtn = qs('#genBtn');
+  const linksBox = qs('#linksBox');
+  const revealCard = qs('#revealCard');
+  const adminCard = qs('#adminCard');
+  const themeBox = qs('#themeBox');
+
+  // Namn i vinlottot
+  const personNames = ["Simon", "Isak", "William"];
+
+  // 20 vinregioner (rött vin ≤300 kr)
+  const defaultThemes = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20"
+  ];
+  themesInput.value = defaultThemes.join('\n');
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function makeLink(theme) {
+    const payload = btoa(unescape(encodeURIComponent(theme)));
+    return window.location.href.split('#')[0].replace(/^file:\/\/\/?[A-Z]:/i, '') + '#theme=' + payload;
+  }
+
+  genBtn.addEventListener('click', () => {
+    const themes = themesInput.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    if (themes.length < personNames.length) return alert("Du måste ha minst " + personNames.length + " teman!");
+    const shuffled = shuffle(themes).slice(0, personNames.length);
+    linksBox.innerHTML = '';
+    shuffled.forEach((t, i) => {
+      const name = personNames[i];
+      const url = makeLink(t);
+      const div = document.createElement('div');
+      div.className = 'linkcard';
+      div.innerHTML = `
+        <div><span class="pill">Länk för ${name}</span></div>
+        <div class="mono" id="url-${i}" style="margin:6px 0;">${url}</div>
+        <div style="margin-top:6px;">
+          <button class="secondary" id="copy-${i}">Kopiera</button>
+          <a href="${url}"><button>Öppna</button></a>
+        </div>
+      `;
+      linksBox.appendChild(div);
+      // Kopiera-funktion med feedback
+      div.querySelector(`#copy-${i}`).addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(url);
+          const btn = div.querySelector(`#copy-${i}`);
+          btn.textContent = "✅ Kopierad!";
+          btn.disabled = true;
+          setTimeout(() => { btn.textContent = "Kopiera"; btn.disabled = false; }, 1500);
+        } catch (err) {
+          alert("Kunde inte kopiera automatiskt – kopiera manuellt istället.");
+        }
+      });
+    });
+  });
+
+  // Reveal mode
+  const hash = location.hash.match(/^#theme=(.+)$/);
+  if (hash) {
+    try {
+      const decoded = decodeURIComponent(escape(atob(hash[1])));
+      adminCard.style.display = 'none';
+      revealCard.style.display = '';
+      themeBox.textContent = decoded;
+    } catch(e) {
+      console.error(e);
+    }
+  }
+})();
+</script>
+</body>
+</html>
