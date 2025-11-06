@@ -167,9 +167,11 @@
 
   genBtn.addEventListener('click', () => {
     const themes = themesInput.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
-    const shuffled = shuffle(themes).slice(0, personNames.length);
+    const shuffled = shuffle(themes);
+    const offset = Math.floor(Math.random() * (themes.length - personNames.length));
+    const picked = shuffled.slice(offset, offset + personNames.length);
     linksBox.innerHTML = '';
-    shuffled.forEach((theme, i) => {
+    picked.forEach((theme, i) => {
       const name = personNames[i];
       const url = makeLink(name, theme);
       const div = document.createElement('div');
