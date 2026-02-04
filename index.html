@@ -1,9 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="sv">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Vinlotto 2025 🍷</title>
+  <title>Vinlotto 2025 ðŸ·</title>
   <style>
     :root {
       --wine: #7b1e26;
@@ -106,23 +106,26 @@
 </head>
 <body>
   <div class="card" id="revealCard" style="display:none">
-    <h1>🍇 Ditt vinområde</h1>
-    <p class="sub">Den här sidan visar bara ditt eget område.</p>
+    <h1>ðŸ‡ Ditt vinomrÃ¥de</h1>
+    <p class="sub">Den hÃ¤r sidan visar bara ditt eget omrÃ¥de.</p>
     <div id="themeBox"></div>
   </div>
 
   <div class="card" id="adminCard">
-    <h1>Vinlotto 2025 🍷</h1>
-    <p class="sub">20 vinregioner – slumpas till Simon, Isak och William. Var och en får sin egen hemliga länk.</p>
-
+    <h1>Vinlotto 2025 ðŸ·</h1>
+    <p class="sub">20 vinregioner â€“ slumpas till Simon, Isak och William. Var och en fÃ¥r sin egen hemliga lÃ¤nk.</p>
+    <p class="sub">Redan besökta vinregioner: </p>
+    <p>Piemonte (Italien)</p>
+    <p></p>Stellenbosh (Sydafrika)</p>
+    <p>Sonoma County (USA)</p>
     <textarea id="themesInput" spellcheck="false"></textarea>
 
     <div class="actions">
-      <button id="genBtn">🎲 Skapa tre hemliga länkar</button>
+      <button id="genBtn">ðŸŽ² Skapa tre hemliga lÃ¤nkar</button>
     </div>
 
     <div id="linksBox" class="links">
-      <div class="muted" style="text-align:center;">Inga länkar ännu.</div>
+      <div class="muted" style="text-align:center;">Inga lÃ¤nkar Ã¤nnu.</div>
     </div>
   </div>
 
@@ -138,11 +141,11 @@
 
   const personNames = ["Simon", "Isak", "William"];
   const defaultThemes = [
-    "Piemonte, Italien", "Barossa Valley, Australien", "Rioja, Spanien", "Mendoza, Argentina", 
-    "Bourgogne, Frankrike", "Toscana, Italien", "Stellenbosch, Sydafrika", "Sonoma County, USA", 
+    "Barossa Valley, Australien", "Rioja, Spanien", "Mendoza, Argentina", 
+    "Bourgogne, Frankrike", "Toscana, Italien", 
     "Priorat, Spanien", "Loire-dalen, Frankrike", "Maipo Valley, Chile", "Douro, Portugal", 
     "Napa Valley, USA", "Alsace, Frankrike", "Veneto, Italien", "Ribera del Duero, Spanien", 
-    "Rhône-dalen, Frankrike", "Marlborough, Nya Zeeland", "Bordeaux, Frankrike"
+    "RhÃ´ne-dalen, Frankrike", "Marlborough, Nya Zeeland", "Bordeaux, Frankrike"
 
   ];
   themesInput.value = defaultThemes.join('\n');
@@ -178,13 +181,13 @@
         <div class="mono">${url}</div>
         <div style="margin-top:6px;">
           <button class="secondary" id="copy-${i}">Kopiera</button>
-          <a href="${url}" target="_blank"><button>Öppna</button></a>
+          <a href="${url}" target="_blank"><button>Ã–ppna</button></a>
         </div>`;
       linksBox.appendChild(div);
       div.querySelector(`#copy-${i}`).addEventListener('click', async () => {
         await navigator.clipboard.writeText(url);
         const btn = div.querySelector(`#copy-${i}`);
-        btn.textContent = "✅ Kopierad!";
+        btn.textContent = "âœ… Kopierad!";
         btn.disabled = true;
         setTimeout(() => { btn.textContent = "Kopiera"; btn.disabled = false; }, 1500);
       });
@@ -198,9 +201,9 @@
       adminCard.style.display = 'none';
       revealCard.style.display = '';
       themeBox.innerHTML = `
-        <p>Tja <b>${decoded.name}</b> 🍷</p>
-        <p>Din region du ska fördjupa dig inom är <b>${decoded.theme}</b>.</p>
-        <p>Ska bli riktigt spännande lära sig nya grejer!</p>
+        <p>Tja <b>${decoded.name}</b> ðŸ·</p>
+        <p>Din region du ska fÃ¶rdjupa dig inom Ã¤r <b>${decoded.theme}</b>.</p>
+        <p>Ska bli riktigt spÃ¤nnande lÃ¤ra sig nya grejer!</p>
       `;
     } catch(e) {
       console.error(e);
