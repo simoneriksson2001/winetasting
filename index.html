@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Vinlotto 2025 ðŸ·</title>
+  <title>Vinlotto 2025 🍷</title>
   <style>
     :root {
       --wine: #7b1e26;
@@ -39,7 +39,7 @@
     p.sub {
       color: #666;
       margin-top: 0;
-      margin-bottom: 1.5em;
+      margin-bottom: 1.1em;
     }
     #themeBox {
       margin: 20px auto;
@@ -98,6 +98,24 @@
     .mono { font-family: ui-monospace, Menlo, Consolas, monospace; word-break: break-all; }
     .muted { color: #666; font-size: .9em; }
     .actions { text-align: center; margin: 16px 0; }
+    .visited { list-style: none; padding: 0; margin: 6px 0 14px; }
+    .visited li { margin: 2px 0; }
+    .tabs { display: flex; gap: 8px; position: absolute; left: 18px; top: 18px; }
+    .tab {
+      border: 1px solid var(--wine-dark);
+      background: #fff;
+      color: var(--wine-dark);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tab.active { background: var(--wine); color: #fff; }
+    .uploads { text-align: left; margin-top: 12px; }
+    .upload-item { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
+    .upload-item a { color: var(--wine-dark); font-weight: 600; text-decoration: none; }
+    .upload-item span { font-size: .9em; color: #666; }
     @media (max-width: 600px) {
       .card { padding: 20px; }
       h1 { font-size: 1.5rem; }
@@ -105,27 +123,43 @@
   </style>
 </head>
 <body>
+  <div class="tabs">
+    <button class="tab active" id="tab-lotto">Vinlotto</button>
+    <button class="tab" id="tab-pres">Presentationer</button>
+  </div>
   <div class="card" id="revealCard" style="display:none">
-    <h1>ðŸ‡ Ditt vinomrÃ¥de</h1>
-    <p class="sub">Den hÃ¤r sidan visar bara ditt eget omrÃ¥de.</p>
+    <h1>🍇 Ditt vinområde</h1>
+    <p class="sub">Den här sidan visar bara ditt eget område.</p>
     <div id="themeBox"></div>
   </div>
 
   <div class="card" id="adminCard">
-    <h1>Vinlotto 2025 ðŸ·</h1>
-    <p class="sub">20 vinregioner â€“ slumpas till Simon, Isak och William. Var och en fÃ¥r sin egen hemliga lÃ¤nk.</p>
-    <p class="sub">Redan besökta vinregioner: </p>
-    <p>Piemonte (Italien)</p>
-    <p></p>Stellenbosh (Sydafrika)</p>
-    <p>Sonoma County (USA)</p>
+    <h1>Vinlotto 2025 🍷</h1>
+    <p class="sub">20 vinregioner – slumpas till Simon, Isak och William. Var och en får sin egen hemliga länk.</p>
+    <p class="sub">Redan besökta vinregioner:</p>
+    <ul class="visited">
+      <li>Piemonte (Italien)</li>
+      <li>Stellenbosch (Sydafrika)</li>
+      <li>Sonoma County (USA)</li>
+    </ul>
+
     <textarea id="themesInput" spellcheck="false"></textarea>
 
     <div class="actions">
-      <button id="genBtn">ðŸŽ² Skapa tre hemliga lÃ¤nkar</button>
+      <button id="genBtn">🎲 Skapa tre hemliga länkar</button>
     </div>
 
     <div id="linksBox" class="links">
-      <div class="muted" style="text-align:center;">Inga lÃ¤nkar Ã¤nnu.</div>
+      <div class="muted" style="text-align:center;">Inga länkar ännu.</div>
+    </div>
+  </div>
+
+  <div class="card" id="presentationsCard" style="display:none">
+    <h1>Presentationer 🍇</h1>
+    <p class="sub">Samla PowerPoints eller PDF:er för de redan besökta vinregionerna.</p>
+    <input type="file" id="fileInput" accept=".pdf,.ppt,.pptx,.pptm,.pps,.ppsx" multiple />
+    <div class="uploads" id="uploadsBox">
+      <div class="muted">Inga filer ännu. Lägg till för att dela.</div>
     </div>
   </div>
 
@@ -138,15 +172,20 @@
   const revealCard = qs('#revealCard');
   const adminCard = qs('#adminCard');
   const themeBox = qs('#themeBox');
+  const tabLotto = qs('#tab-lotto');
+  const tabPres = qs('#tab-pres');
+  const presentationsCard = qs('#presentationsCard');
+  const fileInput = qs('#fileInput');
+  const uploadsBox = qs('#uploadsBox');
 
   const personNames = ["Simon", "Isak", "William"];
   const defaultThemes = [
-    "Barossa Valley, Australien", "Rioja, Spanien", "Mendoza, Argentina", 
-    "Bourgogne, Frankrike", "Toscana, Italien", 
-    "Priorat, Spanien", "Loire-dalen, Frankrike", "Maipo Valley, Chile", "Douro, Portugal", 
-    "Napa Valley, USA", "Alsace, Frankrike", "Veneto, Italien", "Ribera del Duero, Spanien", 
-    "RhÃ´ne-dalen, Frankrike", "Marlborough, Nya Zeeland", "Bordeaux, Frankrike"
-
+    "Barossa Valley, Australien", "Rioja, Spanien", "Mendoza, Argentina",
+    "Bourgogne, Frankrike", "Toscana, Italien",
+    "Priorat, Spanien", "Loire-dalen, Frankrike", "Maipo Valley, Chile", "Douro, Portugal",
+    "Napa Valley, USA", "Alsace, Frankrike", "Veneto, Italien", "Ribera del Duero, Spanien",
+    "Rhône-dalen, Frankrike", "Marlborough, Nya Zeeland", "Bordeaux, Frankrike", "Barolo, Italien",
+    "Sicilien, Italien", "Rías Baixas, Spanien", "Mosel, Tyskland", "Willamette Valley, USA"
   ];
   themesInput.value = defaultThemes.join('\n');
 
@@ -167,8 +206,12 @@
 
   genBtn.addEventListener('click', () => {
     const themes = themesInput.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    if (themes.length < personNames.length) {
+      alert('Behöver minst ' + personNames.length + ' regioner.');
+      return;
+    }
     const shuffled = shuffle(themes);
-    const offset = Math.floor(Math.random() * (themes.length - personNames.length));
+    const offset = Math.floor(Math.random() * (themes.length - personNames.length + 1));
     const picked = shuffled.slice(offset, offset + personNames.length);
     linksBox.innerHTML = '';
     picked.forEach((theme, i) => {
@@ -179,17 +222,17 @@
       div.innerHTML = `
         <div><span class="pill">${name}</span></div>
         <div class="mono">${url}</div>
-        <div style="margin-top:6px;">
+        <div style="margin-top:6px; display:flex; gap:8px; justify-content:center;">
           <button class="secondary" id="copy-${i}">Kopiera</button>
-          <a href="${url}" target="_blank"><button>Ã–ppna</button></a>
+          <a href="${url}" target="_blank" rel="noopener"><button>Öppna</button></a>
         </div>`;
       linksBox.appendChild(div);
       div.querySelector(`#copy-${i}`).addEventListener('click', async () => {
         await navigator.clipboard.writeText(url);
         const btn = div.querySelector(`#copy-${i}`);
-        btn.textContent = "âœ… Kopierad!";
+        btn.textContent = '✅ Kopierad!';
         btn.disabled = true;
-        setTimeout(() => { btn.textContent = "Kopiera"; btn.disabled = false; }, 1500);
+        setTimeout(() => { btn.textContent = 'Kopiera'; btn.disabled = false; }, 1500);
       });
     });
   });
@@ -201,14 +244,58 @@
       adminCard.style.display = 'none';
       revealCard.style.display = '';
       themeBox.innerHTML = `
-        <p>Tja <b>${decoded.name}</b> ðŸ·</p>
-        <p>Din region du ska fÃ¶rdjupa dig inom Ã¤r <b>${decoded.theme}</b>.</p>
-        <p>Ska bli riktigt spÃ¤nnande lÃ¤ra sig nya grejer!</p>
+        <p>Tja <b>${decoded.name}</b> 🍷</p>
+        <p>Din region du ska fördjupa dig inom är <b>${decoded.theme}</b>.</p>
+        <p>Ska bli riktigt spännande att lära sig nya grejer!</p>
       `;
     } catch(e) {
       console.error(e);
     }
   }
+
+  function renderUploads(files) {
+    uploadsBox.innerHTML = '';
+    if (!files.length) {
+      uploadsBox.innerHTML = '<div class="muted">Inga filer ännu. Lägg till för att dela.</div>';
+      return;
+    }
+    files.forEach(file => {
+      const row = document.createElement('div');
+      row.className = 'upload-item';
+      const link = document.createElement('a');
+      link.href = file.url;
+      link.textContent = file.name;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      const meta = document.createElement('span');
+      meta.textContent = Math.round(file.size / 1024) + ' kB';
+      row.appendChild(link);
+      row.appendChild(meta);
+      uploadsBox.appendChild(row);
+    });
+  }
+
+  let uploadedFiles = [];
+  fileInput.addEventListener('change', e => {
+    const files = Array.from(e.target.files || []);
+    const mapped = files.map(f => ({
+      name: f.name,
+      size: f.size,
+      url: URL.createObjectURL(f)
+    }));
+    uploadedFiles = mapped;
+    renderUploads(uploadedFiles);
+  });
+
+  function showTab(tab) {
+    const lotto = tab === 'lotto';
+    adminCard.style.display = lotto ? '' : 'none';
+    presentationsCard.style.display = lotto ? 'none' : '';
+    tabLotto.classList.toggle('active', lotto);
+    tabPres.classList.toggle('active', !lotto);
+  }
+  tabLotto.addEventListener('click', () => showTab('lotto'));
+  tabPres.addEventListener('click', () => showTab('pres'));
 })();
 </script>
 </body>
