@@ -113,13 +113,10 @@
     }
     .tab.active { background: var(--wine); color: #fff; }
     .uploads { text-align: left; margin-top: 12px; }
-    .upload-item { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
-    .upload-item a { color: var(--wine-dark); font-weight: 600; text-decoration: none; }
-    .upload-item span { font-size: .9em; color: #666; }
     .count { text-align: right; color: #666; font-size: .9em; margin-top: 4px; }
     .pres-list { list-style: none; padding: 0; margin: 12px 0 0; }
-    .pres-list li { margin: 8px 0; line-height: 1.4; }
-    .pres-meta { display: block; color: #666; font-size: .9em; }
+    .pres-list li { margin: 12px 0; line-height: 1.4; }
+    .pres-meta { display: block; color: #666; font-size: .9em; font-weight: 700; }
     @media (max-width: 600px) {
       .card { padding: 20px; }
       h1 { font-size: 1.5rem; }
@@ -138,7 +135,7 @@
   </div>
 
   <div class="card" id="adminCard">
-    <h1>Vinlotto 2025 🍷</h1>
+    <h1>Vinlotto 2026 🍷</h1>
     <p class="sub">20 vinregioner – slumpas till Simon, Isak och William. Var och en får sin egen hemliga länk.</p>
     <p class="sub">Redan besökta vinregioner:</p>
     <ul class="visited">
@@ -161,11 +158,7 @@
 
   <div class="card" id="presentationsCard" style="display:none">
     <h1>Presentationer 🍇</h1>
-    <p class="sub">Samla PowerPoints eller PDF:er för de redan besökta vinregionerna.</p>
-    <input type="file" id="fileInput" accept=".pdf,.ppt,.pptx,.pptm,.pps,.ppsx" multiple />
-    <div class="uploads" id="uploadsBox">
-      <div class="muted">Inga filer ännu. Lägg till för att dela.</div>
-    </div>
+    <p class="sub">PDF-presentationer för redan besökta vinregioner.</p>
     <h3 style="margin-top:18px;">Presentationer (arkiv)</h3>
     <ul class="pres-list" id="storedPresList">
       <li class="muted">Inga sparade presentationer ännu.</li>
@@ -185,8 +178,6 @@
   const tabLotto = qs('#tab-lotto');
   const tabPres = qs('#tab-pres');
   const presentationsCard = qs('#presentationsCard');
-  const fileInput = qs('#fileInput');
-  const uploadsBox = qs('#uploadsBox');
   const storedPresList = qs('#storedPresList');
 
   const personNames = ["Simon", "Isak", "William"];
@@ -204,8 +195,8 @@
 
   const storedPresentations = [
     {
-      name: "Stellenbosch.pptx",
-      url: "Stellenbosch.pptx",
+      name: "Stellenbosch.pdf",
+      url: "Stellenbosch.pdf",
       date: "2026-01-31",
       place: "Vällingby, Stockholm"
     }
@@ -276,40 +267,6 @@
     }
   }
 
-  function renderUploads(files) {
-    uploadsBox.innerHTML = '';
-    if (!files.length) {
-      uploadsBox.innerHTML = '<div class="muted">Inga filer ännu. Lägg till för att dela.</div>';
-      return;
-    }
-    files.forEach(file => {
-      const row = document.createElement('div');
-      row.className = 'upload-item';
-      const link = document.createElement('a');
-      link.href = file.url;
-      link.textContent = file.name;
-      link.target = '_blank';
-      link.rel = 'noopener';
-      const meta = document.createElement('span');
-      meta.textContent = Math.round(file.size / 1024) + ' kB';
-      row.appendChild(link);
-      row.appendChild(meta);
-      uploadsBox.appendChild(row);
-    });
-  }
-
-  let uploadedFiles = [];
-  fileInput.addEventListener('change', e => {
-    const files = Array.from(e.target.files || []);
-    const mapped = files.map(f => ({
-      name: f.name,
-      size: f.size,
-      url: URL.createObjectURL(f)
-    }));
-    uploadedFiles = mapped;
-    renderUploads(uploadedFiles);
-  });
-
   function showTab(tab) {
     const lotto = tab === 'lotto';
     adminCard.style.display = lotto ? '' : 'none';
@@ -336,8 +293,8 @@
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .forEach(p => {
         const li = document.createElement('li');
-        li.innerHTML = `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>
-                        <span class="pres-meta">${p.date} – ${p.place}</span>`;
+        li.innerHTML = `<span class="pres-meta">${p.date} – ${p.place}</span>
+                        <a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
         storedPresList.appendChild(li);
       });
   }
