@@ -116,6 +116,10 @@
     .upload-item { display: flex; align-items: center; gap: 10px; margin: 6px 0; }
     .upload-item a { color: var(--wine-dark); font-weight: 600; text-decoration: none; }
     .upload-item span { font-size: .9em; color: #666; }
+    .count { text-align: right; color: #666; font-size: .9em; margin-top: 4px; }
+    .pres-list { list-style: none; padding: 0; margin: 12px 0 0; }
+    .pres-list li { margin: 8px 0; line-height: 1.4; }
+    .pres-meta { display: block; color: #666; font-size: .9em; }
     @media (max-width: 600px) {
       .card { padding: 20px; }
       h1 { font-size: 1.5rem; }
@@ -144,6 +148,7 @@
     </ul>
 
     <textarea id="themesInput" spellcheck="false"></textarea>
+    <div class="count" id="themeCount"></div>
 
     <div class="actions">
       <button id="genBtn">🎲 Skapa tre hemliga länkar</button>
@@ -161,6 +166,10 @@
     <div class="uploads" id="uploadsBox">
       <div class="muted">Inga filer ännu. Lägg till för att dela.</div>
     </div>
+    <h3 style="margin-top:18px;">Presentationer (arkiv)</h3>
+    <ul class="pres-list" id="storedPresList">
+      <li class="muted">Inga sparade presentationer ännu.</li>
+    </ul>
   </div>
 
 <script>
@@ -172,11 +181,13 @@
   const revealCard = qs('#revealCard');
   const adminCard = qs('#adminCard');
   const themeBox = qs('#themeBox');
+  const themeCount = qs('#themeCount');
   const tabLotto = qs('#tab-lotto');
   const tabPres = qs('#tab-pres');
   const presentationsCard = qs('#presentationsCard');
   const fileInput = qs('#fileInput');
   const uploadsBox = qs('#uploadsBox');
+  const storedPresList = qs('#storedPresList');
 
   const personNames = ["Simon", "Isak", "William"];
   const defaultThemes = [
@@ -188,6 +199,18 @@
     "Sicilien, Italien", "Rías Baixas, Spanien", "Mosel, Tyskland", "Willamette Valley, USA"
   ];
   themesInput.value = defaultThemes.join('\n');
+  updateCount();
+  themesInput.addEventListener('input', updateCount);
+
+  const storedPresentations = [
+    {
+      name: "Stellenbosch.pptx",
+      url: "Stellenbosch.pptx",
+      date: "2026-01-31",
+      place: "Vällingby, Stockholm"
+    }
+  ];
+  renderStoredPresentations();
 
   function shuffle(arr) {
     const a = arr.slice();
@@ -296,6 +319,28 @@
   }
   tabLotto.addEventListener('click', () => showTab('lotto'));
   tabPres.addEventListener('click', () => showTab('pres'));
+
+  function updateCount() {
+    const themes = themesInput.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+    themeCount.textContent = `Antal regioner: ${themes.length}`;
+  }
+
+  function renderStoredPresentations() {
+    storedPresList.innerHTML = '';
+    if (!storedPresentations.length) {
+      storedPresList.innerHTML = '<li class="muted">Inga sparade presentationer ännu.</li>';
+      return;
+    }
+    storedPresentations
+      .slice()
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .forEach(p => {
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>
+                        <span class="pres-meta">${p.date} – ${p.place}</span>`;
+        storedPresList.appendChild(li);
+      });
+  }
 })();
 </script>
 </body>
