@@ -116,8 +116,9 @@
     .uploads { text-align: left; margin-top: 12px; }
     .count { text-align: right; color: #666; font-size: .9em; margin-top: 4px; }
     .pres-list { list-style: none; padding: 0; margin: 12px 0 0; display: block; }
-    .pres-list li { margin: 12px 0; line-height: 1.4; display: block; }
+    .pres-list li { margin: 14px 0; line-height: 1.5; display: block; }
     .pres-meta { display: block; color: #666; font-size: .9em; font-weight: 700; }
+    .pres-link { display: block; margin-top: 4px; }
     @media (max-width: 600px) {
       .card { padding: 20px; }
       h1 { font-size: 1.5rem; }
@@ -301,8 +302,8 @@
       .forEach(p => {
         const li = document.createElement('li');
         li.innerHTML = `
-          <span class="pres-meta">${p.date} | ${p.place}</span>
-          <div><a href="${p.url}" target="_blank" rel="noopener">${p.name}</a></div>
+          <span class="pres-meta">${p.date} – ${p.place}</span>
+          <a class="pres-link" href="${p.url}" target="_blank" rel="noopener">${p.name}</a>
         `;
         storedPresList.appendChild(li);
       });
