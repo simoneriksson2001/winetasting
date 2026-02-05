@@ -303,17 +303,45 @@
       storedPresList.innerHTML = '<li class="muted">Inga sparade presentationer ännu.</li>';
       return;
     }
+    // Grupp efter datum+plats så rubriken visas en gång
+    const groups = {};
     storedPresentations
       .slice()
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .forEach(p => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-          <span class="pres-meta">${p.date} – ${p.place}</span>
-          <a class="pres-link" href="${p.url}" target="_blank" rel="noopener">${p.name}</a>
-        `;
-        storedPresList.appendChild(li);
+        const key = `${p.date}|||${p.place}`;
+        if (!groups[key]) groups[key] = { date: p.date, place: p.place, files: [] };
+        groups[key].files.push(p);
       });
+
+    Object.values(groups).forEach(group => {
+      const li = document.createElement('li');
+      const heading = document.createElement('span');
+      heading.className = 'pres-meta';
+      heading.textContent = `${group.date} – ${group.place}`;
+      li.appendChild(heading);
+
+      const list = document.createElement('ul');
+      list.style.listStyle = 'disc';
+      list.style.margin = '6px 0 0 18px';
+      list.style.padding = '0';
+
+      group.files.forEach(file => {
+        const item = document.createElement('li');
+        item.style.margin = '4px 0';
+        const link = document.createElement('a');
+        link.className = 'pres-link';
+        link.href = file.url;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        link.textContent = file.name;
+        item.appendChild(link);
+        list.appendChild(item);
+      });
+
+      li.appendChild(list);
+      storedPresList.appendChild(li);
+    });
   }
 })();
 </script>
