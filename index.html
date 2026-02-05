@@ -177,12 +177,12 @@
 
   <div class="card" id="mapCard" style="display:block;">
     <h1>Karta 🗺️</h1>
-    <p class="sub">Här kan vi lägga till en karta över vinregionerna.</p>
+    <p class="sub">Alla 23 vinregioner, kolla gärna.</p>
 
     <!-- Själva kartan -->
     <div id="wineMap" style="height: 400px; width: 100%; border-radius: 12px;"></div>
   </div>
-  
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -193,6 +193,59 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 18,
   attribution: '&copy; OpenStreetMap'
 }).addTo(map);
+</script>
+
+<script>
+  // ... din Leaflet init + tileLayer ovan ...
+
+  // Test: en enkel polygon (låtsas-"Bordeaux") bara för att bevisa flödet
+  const testWineRegion = {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": { "name": "Bordeaux (test)" },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [-1.5, 45.0],
+            [ 0.8, 45.0],
+            [ 0.8, 45.9],
+            [-1.5, 45.9],
+            [-1.5, 45.0]
+          ]]
+        }
+      }
+    ]
+  };
+
+  function style(feature) {
+    return {
+      weight: 1,
+      color: "#ffffff",
+      fillOpacity: 0.6
+    };
+  }
+
+  function onEachFeature(feature, layer) {
+    layer.bindTooltip(feature.properties.name, { sticky: true });
+
+    layer.on("mouseover", (e) => {
+      e.target.setStyle({ weight: 2, fillOpacity: 0.85 });
+      e.target.bringToFront();
+    });
+
+    layer.on("mouseout", (e) => {
+      geojsonLayer.resetStyle(e.target);
+    });
+  }
+
+  const geojsonLayer = L.geoJSON(testWineRegion, {
+    style,
+    onEachFeature
+  }).addTo(map);
+
+  map.fitBounds(geojsonLayer.getBounds(), { padding: [20, 20] });
 </script>
 
 
