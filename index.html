@@ -115,8 +115,8 @@
     .tab.active { background: var(--wine); color: #fff; }
     .uploads { text-align: left; margin-top: 12px; }
     .count { text-align: right; color: #666; font-size: .9em; margin-top: 4px; }
-    .pres-list { list-style: none; padding: 0; margin: 12px 0 0; }
-    .pres-list li { margin: 12px 0; line-height: 1.4; }
+    .pres-list { list-style: none; padding: 0; margin: 12px 0 0; display: block; }
+    .pres-list li { margin: 12px 0; line-height: 1.4; display: block; }
     .pres-meta { display: block; color: #666; font-size: .9em; font-weight: 700; }
     @media (max-width: 600px) {
       .card { padding: 20px; }
@@ -300,8 +300,10 @@
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .forEach(p => {
         const li = document.createElement('li');
-        li.innerHTML = `<span class="pres-meta">${p.date} | ${p.place}</span>
-                        <a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
+        li.innerHTML = `
+          <span class="pres-meta">${p.date} | ${p.place}</span>
+          <div><a href="${p.url}" target="_blank" rel="noopener">${p.name}</a></div>
+        `;
         storedPresList.appendChild(li);
       });
   }
