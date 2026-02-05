@@ -175,11 +175,14 @@
     </ul>
   </div>
 
-  <div class="card" id="mapCard" style="display:none">
+  <div class="card" id="mapCard" style="display:block;">
     <h1>Karta 🗺️</h1>
     <p class="sub">Här kan vi lägga till en karta över vinregionerna.</p>
-    <div class="muted">Innehåll kommer snart.</div>
+
+    <!-- Själva kartan -->
+    <div id="wineMap" style="height: 400px; width: 100%; border-radius: 12px;"></div>
   </div>
+
 
 <script>
 (async function() {
