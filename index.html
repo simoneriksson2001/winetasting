@@ -182,6 +182,18 @@
     <!-- Själva kartan -->
     <div id="wineMap" style="height: 400px; width: 100%; border-radius: 12px;"></div>
   </div>
+  
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+const map = L.map("wineMap").setView([20, 10], 2);
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 18,
+  attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+</script>
 
 
 <script>
