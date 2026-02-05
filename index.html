@@ -196,10 +196,14 @@
 
   const storedPresentations = [
     {
-      name: "Piemonte.pdf",
-      url: "Piemonte.pdf",
       name: "Stellenbosch.pdf",
       url: "Stellenbosch.pdf",
+      date: "2026-01-31",
+      place: "Vällingby, Stockholm"
+    },
+    {
+      name: "Piemonte.pdf",
+      url: "Piemonte.pdf",
       date: "2026-01-31",
       place: "Vällingby, Stockholm"
     }
@@ -296,7 +300,7 @@
       .sort((a, b) => new Date(b.date) - new Date(a.date))
       .forEach(p => {
         const li = document.createElement('li');
-        li.innerHTML = `<span class="pres-meta">${p.date} – ${p.place}</span>
+        li.innerHTML = `<span class="pres-meta">${p.date} | ${p.place}</span>
                         <a href="${p.url}" target="_blank" rel="noopener">${p.name}</a>`;
         storedPresList.appendChild(li);
       });
