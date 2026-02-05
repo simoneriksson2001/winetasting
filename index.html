@@ -175,7 +175,7 @@
     </ul>
   </div>
 
-  <div class="card" id="mapCard" style="display:block;">
+  <div class="card" id="mapCard" style="display:none;">
     <h1>Karta 🗺️</h1>
     <p class="sub">Alla 23 vinregioner, kolla gärna.</p>
 
@@ -374,6 +374,8 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   tabLotto.addEventListener('click', () => showTab('lotto'));
   tabPres.addEventListener('click', () => showTab('pres'));
   tabMap.addEventListener('click', () => showTab('map'));
+  // Sätt startläge
+  showTab('lotto');
 
   function updateCount() {
     const themes = themesInput.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
