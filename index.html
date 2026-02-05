@@ -136,6 +136,7 @@
   <div class="tabs">
     <button class="tab active" id="tab-lotto">Vinlotto</button>
     <button class="tab" id="tab-pres">Presentationer</button>
+    <button class="tab" id="tab-map">Karta</button>
   </div>
   <div class="card" id="revealCard" style="display:none">
     <h1>🍇 Ditt vinområde</h1>
@@ -174,6 +175,12 @@
     </ul>
   </div>
 
+  <div class="card" id="mapCard" style="display:none">
+    <h1>Karta 🗺️</h1>
+    <p class="sub">Här kan vi lägga till en karta över vinregionerna.</p>
+    <div class="muted">Innehåll kommer snart.</div>
+  </div>
+
 <script>
 (async function() {
   const qs = s => document.querySelector(s);
@@ -186,7 +193,9 @@
   const themeCount = qs('#themeCount');
   const tabLotto = qs('#tab-lotto');
   const tabPres = qs('#tab-pres');
+  const tabMap = qs('#tab-map');
   const presentationsCard = qs('#presentationsCard');
+  const mapCard = qs('#mapCard');
   const storedPresList = qs('#storedPresList');
 
   const personNames = ["Simon", "Isak", "William"];
@@ -285,13 +294,18 @@
 
   function showTab(tab) {
     const lotto = tab === 'lotto';
+    const pres = tab === 'pres';
+    const map = tab === 'map';
     adminCard.style.display = lotto ? '' : 'none';
-    presentationsCard.style.display = lotto ? 'none' : '';
+    presentationsCard.style.display = pres ? '' : 'none';
+    mapCard.style.display = map ? '' : 'none';
     tabLotto.classList.toggle('active', lotto);
-    tabPres.classList.toggle('active', !lotto);
+    tabPres.classList.toggle('active', pres);
+    tabMap.classList.toggle('active', map);
   }
   tabLotto.addEventListener('click', () => showTab('lotto'));
   tabPres.addEventListener('click', () => showTab('pres'));
+  tabMap.addEventListener('click', () => showTab('map'));
 
   function updateCount() {
     const themes = themesInput.value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
